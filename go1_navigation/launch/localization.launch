@@ -1,0 +1,26 @@
+<launch>
+    <arg name="robot_name" default="/"/>
+    <arg name="rviz"       default="true"/>
+
+    <arg if="$(eval arg('robot_name') == '/')"  name="frame_prefix" value="" />
+    <arg unless="$(eval arg('robot_name') == '/')" name="frame_prefix" value="$(arg robot_name)/" />
+
+
+
+  <node pkg="slam_toolbox" type="localization_slam_toolbox_node" name="slam_toolbox" output="screen">
+    <rosparam command="load" file="$(find go1_navigation)/config/mapper_params_localization.yaml" />
+  </node>
+
+    <!-- Calls navigation stack -->
+  <include file="$(find go1_config)/launch/include/move_base.launch">
+      <arg name="frame_prefix" value="$(arg frame_prefix)"/>
+      <arg name="robot_name"   value="$(arg robot_name)"/>
+  </include>
+
+
+  <node if="$(arg rviz)" name="rviz" pkg="rviz" type="rviz"
+      args="-d $(find go1_navigation)/rviz/slam_toolbox_default.rviz"
+      output="screen"/>
+
+
+</launch>

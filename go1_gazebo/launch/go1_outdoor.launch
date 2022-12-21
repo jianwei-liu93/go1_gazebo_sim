@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find go1_gazebo)/launch/outdoor.launch" />
+
+  <include file="$(find go1_gazebo)/launch/spawn_go1.launch"/>
+</launch>

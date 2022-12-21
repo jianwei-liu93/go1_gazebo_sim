@@ -1,0 +1,202 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="rplidar" params="*origin Gazebo:=false">
+
+
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+
+        <joint name="LiDAR_mounting_plate_joint" type="fixed">
+            <xacro:insert_block name="origin"/>
+            <parent link="trunk"/>
+            <child link="LiDAR_mounting_plate"/>
+        </joint>
+    <!-- <joint
+        name="LiDAR_mounting_plate_joint"
+        type="fixed">
+        <origin
+        xyz="0.140468617087559 0 0.057"
+        rpy="0 0 0.000119868886667814" />
+        <parent
+        link="trunk" />
+        <child
+        link="LiDAR_mounting_plate" />
+        <axis
+        xyz="0 0 0" />
+    </joint> -->
+
+        <link
+            name="LiDAR_mounting_plate">
+            <inertial>
+            <origin
+                xyz="-0.0049056 5.8803E-07 0.0015"
+                rpy="0 0 0" />
+            <mass
+                value="0.010024" />
+            <inertia
+                ixx="6.1904E-06"
+                ixy="5.1225E-10"
+                ixz="1.8189E-22"
+                iyy="1.0464E-05"
+                iyz="-2.8179E-21"
+                izz="1.6639E-05" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://go1_description/meshes/RPLidar/LiDAR_mounting_plate.dae" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.79216 0.81961 0.93333 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://go1_description/meshes/RPLidar/LiDAR_mounting_plate.dae" />
+            </geometry>
+            </collision>
+        </link>
+        <link
+            name="LiDAR_cage">
+            <inertial>
+            <origin
+                xyz="-2.7756E-17 2.7756E-16 0.035135"
+                rpy="0 0 0" />
+            <mass
+                value="0.016672" />
+            <inertia
+                ixx="2.9123E-05"
+                ixy="7.3501E-12"
+                ixz="-2.6595E-20"
+                iyy="2.9184E-05"
+                iyz="2.0959E-20"
+                izz="2.3379E-05" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://go1_description/meshes/RPLidar/LiDAR_cage.dae" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.79216 0.81961 0.93333 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://go1_description/meshes/RPLidar/LiDAR_cage.dae" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="LiDAR_cage_joint"
+            type="fixed">
+            <origin
+            xyz="0 0 0.003"
+            rpy="0 0 0" />
+            <parent
+            link="LiDAR_mounting_plate" />
+            <child
+            link="LiDAR_cage" />
+            <axis
+            xyz="0 0 0" />
+        </joint>
+        <link
+            name="M2M2_base_link">
+            <inertial>
+            <origin
+                xyz="-2.3598E-05 -0.00054855 0.026213"
+                rpy="0 0 0" />
+            <mass
+                value="0.036749" />
+            <inertia
+                ixx="1.3371E-05"
+                ixy="6.5456E-09"
+                ixz="1.517E-08"
+                iyy="1.284E-05"
+                iyz="4.7258E-08"
+                izz="2.2002E-05" />
+            </inertial>
+            <visual>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://go1_description/meshes/RPLidar/M2M2_LiDAR.dae" />
+            </geometry>
+            <material
+                name="">
+                <color
+                rgba="0.79216 0.81961 0.93333 1" />
+            </material>
+            </visual>
+            <collision>
+            <origin
+                xyz="0 0 0"
+                rpy="0 0 0" />
+            <geometry>
+                <mesh
+                filename="package://go1_description/meshes/RPLidar/M2M2_LiDAR.dae" />
+            </geometry>
+            </collision>
+        </link>
+        <joint
+            name="M2M2_base_joint"
+            type="fixed">
+            <origin
+            xyz="0 0 -0.003"
+            rpy="0 0 0" />
+            <parent
+            link="LiDAR_cage" />
+            <child
+            link="M2M2_base_link" />
+            <axis
+            xyz="0 0 0" />
+        </joint>
+        <link
+            name="M2M2_laser_link">
+        </link>
+        <joint
+            name="M2M2_laser_joint"
+            type="fixed">
+            <origin
+            xyz="0 0 0.06007"
+            rpy="0 0 ${-M_PI}" />
+            <parent
+            link="M2M2_base_link" />
+            <child
+            link="M2M2_laser_link" />
+            <axis
+            xyz="0 0 0" />
+        </joint>
+        
+        // If using in Gazebo
+        <xacro:if value="${Gazebo}">
+            <xacro:include filename="$(find go1_description)/xacro/Accessories/rplidar.gazebo.xacro"/>
+            <xacro:rplidar_gazebo/>
+        </xacro:if>
+
+
+
+
+
+    </xacro:macro>
+</robot>
